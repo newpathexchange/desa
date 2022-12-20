@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: desa-exercise-api-deployment
+  labels:
+    app: desa
+    component: exercise-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: desa
+      component: exercise-api
+  template:
+    metadata:
+      annotations:
+        kubernetes.io/change-cause: "Initial deployment v0.1.2"
+      labels:
+        environment: dev
+        app: desa
+        component: exercise-api
+        version: "0.1.2"
+    spec:
+      containers:
+        - name: exercise-api
+          image: dreg1.lab.newpathexchange.com/desa/exercise-api:v0.1.2
+          imagePullPolicy: Always
+          tty: true
+          envFrom:
+            - configMapRef:
+                name: desa-exercise-api-config
+          readinessProbe:
+            httpGet:
+              path: /api/k8s/ready
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /api/k8s/alive
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+

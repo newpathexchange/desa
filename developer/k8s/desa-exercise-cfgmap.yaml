@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: desa-exercise-api-config
+data:
+    FLASK_CONFIG: 'kubernetes'
+    # Open Weather Map API config
+    OPENWEATHERMAP_URL: 'https://api.openweathermap.org/data/2.5/weather'
+    OPENWEATHERMAP_KEY: 'REDACTED'
+    OPENWEATHERMAP_RETRIES: '3'
+
