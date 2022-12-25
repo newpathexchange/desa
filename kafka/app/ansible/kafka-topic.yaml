@@ -1,0 +1,24 @@
+---
+
+- name: Create the fake_data topic
+  hosts: desa1
+  vars:
+    kafka_user: kafka
+    kafka_topic: fake_data
+  gather_facts: no
+  tasks:
+    - name: Create the Kafka topic
+      become: yes
+      become_user: "{{ kafka_user }}"
+      shell: |
+          /opt/kafka/bin/kafka-topics.sh --bootstrap-server desa1:9092 \
+              --command-config ~/.kafka-config \
+              --create --topic {{ kafka_topic }} \
+              --partitions 30 --replication-factor 3 --if-not-exists \
+              --config min.insync.replicas=2 \
+              --config compression.type=snappy \
+              --config retention.bytes=1342177280
+      register: result
+
+    - debug: var=result
+
