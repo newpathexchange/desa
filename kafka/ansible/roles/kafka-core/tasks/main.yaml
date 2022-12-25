@@ -1,0 +1,60 @@
+---
+
+- name: Java prerequisite
+  apt:
+    name: openjdk-{{ openjdk_version }}-jdk
+    #name: "{{ java_package }}"
+    state: present
+    update_cache: yes
+  notify: Kafka changed flag
+
+- name: Ubuntu needs acl package
+  apt:
+    name: acl
+    state: present
+
+- name: Kafka group
+  group:
+    name: "{{ kafka_group }}"
+    gid: 15000
+    state: present
+
+- name: Kafka user
+  user:
+    name: "{{ kafka_user }}"
+    comment: Kafka user
+    shell: /bin/bash
+    uid: 15000
+    group: "{{ kafka_group }}"
+    state: present
+
+- name: Kafka directories
+  file:
+    path: "{{ item }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    state: directory
+  loop:
+    - "{{ kafka_data_dir }}"
+    - "{{ kafka_ver_dir }}"
+  notify: Kafka changed flag
+
+- name: Kafka install
+  unarchive:
+    src: "{{ kafka_inst_url }}"
+    remote_src: true
+    dest: "{{ kafka_inst_root }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    creates: "{{ kafka_dir }}/bin/kafka-server-start.sh"
+  notify: Kafka changed flag
+
+- name: Kafka symlink
+  file:
+    src: "{{ kafka_ver_dir }}"
+    path: "{{ kafka_dir }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+    state: link
+  notify: Kafka changed flag
+

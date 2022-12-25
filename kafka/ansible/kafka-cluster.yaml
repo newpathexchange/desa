@@ -1,0 +1,35 @@
+---
+- name: Kafka broker cluster
+  hosts: kafka_broker
+  become: yes
+  vars:
+    remove: no
+    remove_only: no
+  vars_files:
+    - vars_files/{{ env }}/kafka-core.yaml
+    - vars_files/{{ env }}/kafka-broker.yaml
+  tasks:
+    - block:
+        - name: Remove Kafka broker
+          include_role:
+            name: kafka-cluster
+            tasks_from: remove.yaml
+
+        - name: Remove Kafka core
+          include_role:
+            name: kafka-core
+            tasks_from: remove.yaml
+
+      when: remove|bool or remove_only|bool
+
+    - block:
+        - name: Kafka core
+          include_role:
+            name: kafka-core
+
+        - name: Kafka broker
+          include_role:
+            name: kafka-cluster
+
+      when: not remove_only|bool
+

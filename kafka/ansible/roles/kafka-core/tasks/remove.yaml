@@ -1,0 +1,27 @@
+---
+
+- name: Remove Kafka files and directories
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ kafka_service_file }}"
+    - "{{ kafka_dir }}"
+    - "{{ kafka_ver_dir }}"
+    - "{{ kafka_data_dir }}"
+
+- name: Remove Kafka user
+  user:
+    name: "{{ kafka_user }}"
+    state: absent
+
+- name: Remove Kafka group
+  group:
+    name: "{{ kafka_group }}"
+    state: absent
+
+- name: Remove Java
+  apt:
+    name: openjdk-{{ openjdk_version }}-jdk
+    state: absent
+

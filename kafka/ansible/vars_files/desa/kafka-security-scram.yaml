@@ -1,0 +1,20 @@
+---
+# Should be using SSL
+kafka_security_protocol: SASL_PLAINTEXT
+kafka_security_mechanism: SCRAM-SHA-256
+kafka_jaas_module: org.apache.kafka.common.security.scram.ScramLoginModule
+kafka_jass_file: "{{ kafka_dir }}/config/kafka_server_jaas.conf"
+kafka_bin_dir: "{{ kafka_dir }}/bin"
+kafka_client_config_file: "~{{ kafka_user }}/.kafka-config"
+
+# Usage of SCRAM users
+kafka_internal_username: admin
+kafka_schema_registry_username: schema-registry
+
+# User information
+# Should be in a Vault file
+kafka_users:
+  admin: admin123encryptme
+  schema-registry: sr123encryptme
+  app-producer: app123encryptme
+  app-consumer: app123encryptme

@@ -1,0 +1,8 @@
+---
+
+- name: Restart Kafka broker
+  systemd:
+    name: kafka
+    daemon_reload: yes
+    state: restarted
+

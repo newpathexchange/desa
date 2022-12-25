@@ -1,0 +1,9 @@
+---
+# Schema registry variables
+sr_repo_key: https://packages.confluent.io/deb/7.2/archive.key
+sr_repo: deb [arch=amd64] https://packages.confluent.io/deb/7.2 stable main
+
+sr_conf_file: /etc/schema-registry/schema-registry.properties
+sr_service_name: confluent-schema-registry
+
+kafka_security_config: scram

@@ -1,0 +1,15 @@
+---
+openjdk_version: 11
+
+zk_user: zk
+zk_group: zk
+
+zk_port: 2181
+zk_inst_url: http://nfs4/kafka/apache-zookeeper-3.6.3-bin.tar.gz
+
+zk_inst_root: /opt
+zk_ver_dir: "{{ zk_inst_root }}/{{ (zk_inst_url|basename).split('.')[:-2]|join('.') }}"
+zk_dir: "{{ zk_inst_root }}/zookeeper"
+zk_data_dir: /data1/zookeeper
+zk_conf_file: "{{ zk_dir }}/conf/zoo.cfg"
+zk_service_file: /etc/systemd/system/zk.service

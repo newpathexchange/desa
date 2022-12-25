@@ -1,0 +1,48 @@
+---
+
+- name: Confluent apt repository key
+  apt_key:
+    url: "{{ sr_repo_key }}"
+    state: present
+
+- name: Confluent apt repository
+  apt_repository:
+    repo: "{{ sr_repo }}"
+    state: present
+
+- name: Java prerequisite
+  apt:
+    name: openjdk-{{ openjdk_version }}-jdk
+    state: present
+    update_cache: yes
+  notify: Restart schema registry
+
+- name: Schema registry apt package
+  apt:
+    name: confluent-schema-registry
+    state: present
+    update_cache: yes
+  notify: Restart schema registry
+
+- block:
+    - name: Kafka security config variables
+      include_vars:
+        file: vars_files/{{ env }}/kafka-security-{{ kafka_security_config }}.yaml
+
+  when: kafka_security_config != 'none'
+
+- name: Schema registry config file
+  template:
+    src: schema-registry.properties.j2
+    dest: "{{ sr_conf_file }}"
+    mode: '0644'
+  notify: Restart schema registry
+
+- name: Schema registry service started
+  systemd:
+    name: "{{ sr_service_name }}"
+    enabled: yes
+    masked: no
+    daemon_reload: yes
+    state: started
+

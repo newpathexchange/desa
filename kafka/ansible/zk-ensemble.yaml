@@ -1,0 +1,21 @@
+---
+- name: Zookeeper Ensemble
+  hosts: zookeeper
+  become: yes
+  vars:
+    remove: no
+    remove_only: no
+  vars_files:
+    - vars_files/{{ env }}/zk.yaml
+  tasks:
+    - name: Remove ZooKeeper
+      include_role:
+        name: zookeeper-ensemble
+        tasks_from: remove.yaml
+      when: remove|bool or remove_only|bool
+
+    - name: ZooKeeper
+      include_role:
+        name: zookeeper-ensemble
+      when: not remove_only|bool
+

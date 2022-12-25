@@ -1,0 +1,22 @@
+---
+- name: Confluent schema registry
+  hosts: schema_registry
+  become: yes
+  vars:
+    remove: no
+    remove_only: no
+  vars_files:
+    - vars_files/{{ env }}/kafka-core.yaml
+    - vars_files/{{ env }}/schema-registry.yaml
+  tasks:
+    - name: Remove schema registry
+      include_role:
+        name: schema-registry
+        tasks_from: remove.yaml
+      when: remove|bool or remove_only|bool
+
+    - name: Schema registry
+      include_role:
+        name: schema-registry
+      when: not remove_only|bool
+

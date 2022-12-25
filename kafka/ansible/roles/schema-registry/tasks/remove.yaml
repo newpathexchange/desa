@@ -1,0 +1,33 @@
+---
+
+- name: Kafka service stopped
+  systemd:
+    name: kafka
+    state: stopped
+  ignore_errors: true
+
+- name: Remove ZooKeeper files and directories
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ kafka_service_file }}"
+    - "{{ kafka_dir }}"
+    - "{{ kafka_ver_dir }}"
+    - "{{ kafka_data_dir }}"
+
+- name: Remove ZooKeeper user
+  user:
+    name: "{{ kafka_user }}"
+    state: absent
+
+- name: Remove ZooKeeper group
+  group:
+    name: "{{ kafka_group }}"
+    state: absent
+
+- name: Remove Java
+  apt:
+    name: openjdk-{{ openjdk_version }}-jdk
+    state: absent
+

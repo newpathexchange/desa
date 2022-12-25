@@ -1,0 +1,5 @@
+KafkaServer {
+    {{ kafka_jaas_module }} required
+    username="{{ kafka_internal_username }}"
+    password="{{ kafka_users[kafka_internal_username] }}";
+};

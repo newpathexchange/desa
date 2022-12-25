@@ -1,0 +1,25 @@
+---
+- name: Kafka server JAAS conf file
+  template:
+    src: server_jaas.conf.j2
+    dest: "{{ kafka_jass_file }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+  notify: Restart Kafka broker
+
+- name: Create SCRAM users
+  shell: |
+    {{ kafka_bin_dir }}/kafka-configs.sh --zookeeper {{ kafka_zk_connect }} --alter --add-config '{{ kafka_security_mechanism }}=[password={{ kafka_users[item]}}]' --entity-type users --entity-name {{ item }}
+  loop: "{{ kafka_users | list }}"
+  when: inventory_hostname == play_hosts|first
+  register: result
+
+#- debug: var=result
+
+- name: Kafka client config file
+  template:
+    src: kafka-client-config.j2
+    dest: "{{ kafka_client_config_file }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+

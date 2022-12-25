@@ -1,0 +1,22 @@
+[zookeeper]
+zkd1 ansible_user=npxlab
+zkd2 ansible_user=npxlab
+zkd3 ansible_user=npxlab
+
+[kafka_broker]
+desa1 ansible_user=npxlab
+desa2 ansible_user=npxlab
+desa3 ansible_user=npxlab
+
+[schema_registry]
+srd1 ansible_user=npxlab
+
+[zookeeper:vars]
+env=desa
+
+[kafka_broker:vars]
+env=desa
+
+[schema_registry:vars]
+env=desa
+

@@ -1,0 +1,7 @@
+---
+
+- name: Kafka changed flag
+  file:
+    path: /tmp/kafka.changed
+    state: touch
+

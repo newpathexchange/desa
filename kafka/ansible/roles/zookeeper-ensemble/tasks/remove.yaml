@@ -1,0 +1,33 @@
+---
+
+- name: ZooKeeper service stopped
+  systemd:
+    name: zk
+    state: stopped
+  ignore_errors: true
+
+- name: Remove ZooKeeper files and directories
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ zk_service_file }}"
+    - "{{ zk_dir }}"
+    - "{{ zk_ver_dir }}"
+    - "{{ zk_data_dir }}"
+
+- name: Remove ZooKeeper user
+  user:
+    name: "{{ zk_user }}"
+    state: absent
+
+- name: Remove ZooKeeper group
+  group:
+    name: "{{ zk_group }}"
+    state: absent
+
+- name: Remove Java
+  apt:
+    name: openjdk-{{ openjdk_version }}-jdk
+    state: absent
+

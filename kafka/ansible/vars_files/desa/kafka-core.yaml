@@ -1,0 +1,15 @@
+---
+openjdk_version: 11
+
+# Kafka Cluster Variables
+kafka_user: kafka
+kafka_group: kafka
+
+kafka_port: 9092
+kafka_brokers: "{{ groups['kafka_broker'] | product([kafka_port|string]) | map('join', ':') }}"
+kafka_inst_url: http://nfs4/kafka/kafka_2.13-3.3.1.tgz
+
+kafka_inst_root: /opt
+kafka_dir: "{{ kafka_inst_root }}/kafka"
+kafka_ver_dir: "{{ kafka_inst_root }}/{{ kafka_inst_url|basename|splitext|first }}"
+kafka_data_dir: /data1/kafka

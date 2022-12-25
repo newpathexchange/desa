@@ -1,0 +1,14 @@
+---
+# Set in kafka-core.yaml
+#  - kafka_data_dir
+#  - kafka_dir
+
+openjdk_version: 11
+
+kafka_log_dirs: "{{ kafka_data_dir }}/logs"
+kafka_conf_file: "{{ kafka_dir }}/config/server.properties"
+kafka_service_file: /etc/systemd/system/kafka.service
+
+kafka_zk_connect: zkd1:2181,zkd2:2181,zkd3:2181
+
+kafka_security_config: scram

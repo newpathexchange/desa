@@ -1,0 +1,4 @@
+bootstrap.servers: {{ kafka_brokers }}
+security.protocol: {{ kafka_security_protocol }}
+sasl.mechanism: {{ kafka_security_mechanism }}
+sasl.jaas.config={{ kafka_jaas_module }} required username="{{ kafka_internal_username }}" password="{{ kafka_users[kafka_internal_username] }}";

@@ -1,0 +1,4 @@
+---
+openjdk_version: 11
+kafka_security_config: none
+sr_kafka_bootstrap: "{{ kafka_brokers | map('regex_replace', '^', 'PLAINTEXT://') | join(',') }}"

@@ -1,0 +1,40 @@
+---
+
+- name: Check underlying Kafka change
+  file:
+    path: /tmp/kafka.changed
+    state: absent
+  notify: Restart Kafka broker
+
+- block:
+    - name: Kafka security config variables
+      include_vars:
+        file: vars_files/{{ env }}/kafka-security-{{ kafka_security_config }}.yaml
+
+    - name: Kafka security config tasks
+      include_tasks: kafka-security-{{ kafka_security_config }}.yaml
+      
+  when: kafka_security_config != 'none'
+
+- name: Kafka broker config file
+  template:
+    src: server.properties.j2
+    dest: "{{ kafka_conf_file }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_group }}"
+  notify: Restart Kafka broker
+
+- name: Kafka broker service file
+  template:
+    src: kafka.service.j2
+    dest: "{{ kafka_service_file }}"
+  notify: Restart Kafka broker
+
+- name: Kafka broker service started
+  systemd:
+    name: kafka
+    enabled: yes
+    masked: no
+    daemon_reload: yes
+    state: started
+

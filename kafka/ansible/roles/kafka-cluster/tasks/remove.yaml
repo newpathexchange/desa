@@ -1,0 +1,16 @@
+---
+
+- name: Kafka service stopped
+  systemd:
+    name: kafka
+    state: stopped
+  ignore_errors: true
+
+- name: Remove Kafka broker files
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ kafka_service_file }}"
+    - "{{ kafka_conf_file }}"
+
