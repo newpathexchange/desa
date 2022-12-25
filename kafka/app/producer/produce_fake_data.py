@@ -47,7 +47,6 @@ def delivery_report(err, msg):
     if err is not None:
         print('Message delivery failed: {}\n'.format(err))
     else:
-        #print(f"{msg.partition()}-{msg.offset()} ({msg.len()})")
         print(f"{msg.partition()}-{msg.offset()} ({sys.getsizeof(msg.value())})")
 
 
@@ -69,7 +68,6 @@ producer = Producer({
     'compression.type': cfg.KAFKA_PRODUCER_COMPRESSION,
 })
 
-#string_serializer = AvroSerializer(schema_registry_client, key_schema_str)
 string_serializer = StringSerializer('utf_8')
 avro_serializer = AvroSerializer(schema_registry_client, value_schema_str)
 
