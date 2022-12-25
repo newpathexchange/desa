@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: desa-producer-deployment
+  labels:
+    app: desa
+    component: producer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: desa
+      component: producer
+  template:
+    metadata:
+      annotations:
+        kubernetes.io/change-cause: "Initial deployment v0.1.1"
+      labels:
+        environment: dev
+        app: desa
+        component: producer
+        version: "0.1.1"
+    spec:
+      containers:
+        - name: desa-producer-container
+          image: dreg1.lab.newpathexchange.com/desa/producer:v0.1.1
+          imagePullPolicy: Always
+          args: ["kubernetes"]
+          tty: true
+          envFrom:
+            - configMapRef:
+                name: desa-producer-config
+          readinessProbe:
+            exec:
+              command:
+                - /app/k8s_probe.sh
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command:
+                - /app/k8s_probe.sh
+            initialDelaySeconds: 20
+            periodSeconds: 10
+
